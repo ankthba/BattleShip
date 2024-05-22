@@ -1,3 +1,76 @@
-public class AIPlayer {
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
 
+public class AIPlayer extends Player {
+    private Random random;
+    private Queue<String> targetQueue;
+    private String lastHit;
+
+    public AIPlayer() {
+        super();
+        random = new Random();
+        targetQueue = new LinkedList<>();
+        lastHit = null;
+    }
+
+    @Override
+    public void placeShips() {
+        int[] shipLengths = {5, 4, 3, 3, 2}; // lengths of the ships in Battleship
+        for (int length : shipLengths) {
+            Ship ship = new Ship(length);
+            boolean shipPlaced = false;
+            while (!shipPlaced) {
+                int row = random.nextInt(10);
+                int col = random.nextInt(10);
+                boolean horizontal = random.nextBoolean();
+                if (getBoard().canPlaceShip(ship, row, col, horizontal)) {
+                    getBoard().placeShip(ship, row, col, horizontal);
+                    shipPlaced = true;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void takeTurn(GameBoard opponentBoard) {
+        int row, col;
+        if (targetQueue.isEmpty()) {
+            // Hunt mode
+            do {
+                row = random.nextInt(10);
+                col = random.nextInt(10);
+            } while (opponentBoard.getCell(row, col) != '-');
+        } else {
+            // Target mode
+            String[] coords = targetQueue.poll().split(",");
+            row = Integer.parseInt(coords[0]);
+            col = Integer.parseInt(coords[1]);
+        }
+
+        if (opponentBoard.getCell(row, col) == 'S') {
+            opponentBoard.setCell(row, col, 'H'); // H for Hit
+            lastHit = row + "," + col;
+            addTargets(row, col);
+        } else {
+            opponentBoard.setCell(row, col, 'M'); // M for Miss
+        }
+    }
+
+    private void addTargets(int row, int col) {
+        if (lastHit != null) {
+            String[] coords = lastHit.split(",");
+            int lastRow = Integer.parseInt(coords[0]);
+            int lastCol = Integer.parseInt(coords[1]);
+            if (lastRow == row) {
+                // The ship is horizontal
+                if (col > 0) targetQueue.add(row + "," + (col - 1));
+                if (col < 9) targetQueue.add(row + "," + (col + 1));
+            } else if (lastCol == col) {
+                // The ship is vertical
+                if (row > 0) targetQueue.add((row - 1) + "," + col);
+                if (row < 9) targetQueue.add((row + 1) + "," + col);
+            }
+        }
+    }
 }

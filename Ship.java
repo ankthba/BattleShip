@@ -1,21 +1,24 @@
 public class Ship {
     private int length;
-    private int hits;
+    private boolean isSunk;
 
     public Ship(int length) {
         this.length = length;
-        this.hits = 0;
+        this.isSunk = false;
     }
 
     public int getLength() {
         return length;
     }
 
-    public void hit() {
-        hits++;
+    public boolean isSunk() {
+        return isSunk;
     }
 
-    public boolean isSunk() {
-        return hits == length;
+    public void hit() {
+        length--;
+        if (length == 0) {
+            isSunk = true;
+        }
     }
 }

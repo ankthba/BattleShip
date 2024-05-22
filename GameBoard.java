@@ -13,8 +13,8 @@ public class GameBoard {
         }
     }
 
-    public void placeShip(int row, int col, int length, boolean horizontal) {
-        for (int i = 0; i < length; i++) {
+    public void placeShip(Ship ship, int row, int col, boolean horizontal) {
+        for (int i = 0; i < ship.getLength(); i++) {
             if (horizontal) {
                 if (col + i < size) {
                     board.put(row + "," + (col + i), 'S');
@@ -44,8 +44,8 @@ public class GameBoard {
         }
     }
 
-    public boolean canPlaceShip(int row, int col, int length, boolean horizontal) {
-        for (int i = 0; i < length; i++) {
+    public boolean canPlaceShip(Ship ship, int row, int col, boolean horizontal) {
+        for (int i = 0; i < ship.getLength(); i++) {
             if (horizontal) {
                 if (col + i >= size || board.get(row + "," + (col + i)) == 'S') {
                     return false;

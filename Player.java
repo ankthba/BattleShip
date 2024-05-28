@@ -10,7 +10,7 @@ public class Player {
         board = new GameBoard();
         scanner = new Scanner(System.in);
     }
-
+    
     public void placeShips() {
         int[] shipLengths = {5, 4, 3, 3, 2}; // lengths of the ships in Battleship
         System.out.println("Place your ships (format: 'place ship of length [length] at row [row] column [col] [horizontally/vertically]'): ");
@@ -37,7 +37,7 @@ public class Player {
             }
         }
     }
-
+    
     public void takeTurn(GameBoard opponentBoard) {
         System.out.println("Enter target (format: 'target row [row] column [col]'): ");
         Pattern pattern = Pattern.compile("target row (\\d+) column (\\d+)");
@@ -60,8 +60,10 @@ public class Player {
             }
         }
     }
-
+    
     public GameBoard getBoard() {
         return board;
     }
+
+
 }

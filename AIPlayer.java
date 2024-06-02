@@ -7,8 +7,8 @@ public class AIPlayer extends Player {
     private Queue<String> targetQueue;
     private String lastHit;
 
-    public AIPlayer() {
-        super();
+    public AIPlayer(GameBoard board) {
+        super(null, board);
         random = new Random();
         targetQueue = new LinkedList<>();
         lastHit = null;

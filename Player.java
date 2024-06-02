@@ -11,7 +11,7 @@ public class Player {
     }
 
     public void placeShips() {
-        int[] shipLengths = {5, 4, 3, 3, 2}; // lengths of the ships in Battleship
+        int[] shipLengths = {5, 4, 3, 3, 2};
         for (int length : shipLengths) {
             Ship ship = new Ship(length);
             boolean shipPlaced = false;
@@ -29,7 +29,6 @@ public class Player {
                         System.out.println("Cannot place ship here. Try again.");
                     }
                 } else {
-                    // Placeholder for AI ship placement logic if needed
                     shipPlaced = true;
                 }
             }
@@ -44,7 +43,6 @@ public class Player {
                 int row = scanner.nextInt();
                 int col = scanner.nextInt();
                 
-                // Validate input
                 if (row < 0 || row >= 10 || col < 0 || col >= 10) {
                     System.out.println("Invalid input. Row and column must be between 0 and 9.");
                     continue;
@@ -52,12 +50,10 @@ public class Player {
 
                 char cell = opponentBoard.getCell(row, col);
                 if (cell == '-') {
-                    // Miss
                     opponentBoard.setCell(row, col, 'M'); // Mark as Miss
                     System.out.println("Miss!");
                     validMove = true;
                 } else if (cell == 'S') {
-                    // Hit
                     opponentBoard.setCell(row, col, 'H'); // Mark as Hit
                     System.out.println("Hit!");
                     validMove = true;
@@ -68,7 +64,7 @@ public class Player {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter integers for the row and column.");
-                scanner.nextLine(); // Clear the input buffer
+                scanner.nextLine();
             }
         }
     }

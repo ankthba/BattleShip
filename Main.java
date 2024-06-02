@@ -4,15 +4,12 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         
-        // Create separate game boards for the player and AI
         GameBoard playerBoard = new GameBoard();
         GameBoard aiBoard = new GameBoard();
         
-        // Create player and AI instances with their respective boards
         Player player = new Player(scanner, playerBoard);
         AIPlayer aiPlayer = new AIPlayer(aiBoard);
 
-        // Initialize the game
         System.out.println("Player, place your ships on the game board:");
         player.placeShips();
         System.out.println("Player's board:");
@@ -23,10 +20,8 @@ public class Main {
         System.out.println("AI's board (hidden):");
         aiBoard.printBoard();
 
-        // Game loop
         boolean gameRunning = true;
         while (gameRunning) {
-            // Player's turn: pass AI board to player
             System.out.println("Player's turn:");
             player.takeTurn(aiBoard);
             System.out.println("Current status of Player's board:");
@@ -39,7 +34,6 @@ public class Main {
                 break;
             }
 
-            // AI's turn: pass player board to AI
             System.out.println("AI's turn:");
             aiPlayer.takeTurn(playerBoard);
             System.out.println("Current status of Player's board:");

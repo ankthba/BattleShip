@@ -11,5 +11,5 @@ how to open:
   - copy the url
   - open any ide
   - clone using copied link
-  - navigate to Main.java
-  - run code and follow printed directions 
+- navigate to Main.java
+- run code and follow printed directions 

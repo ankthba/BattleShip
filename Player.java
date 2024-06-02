@@ -1,69 +1,79 @@
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
 
 public class Player {
     private GameBoard board;
     private Scanner scanner;
 
-    public Player() {
-        board = new GameBoard();
-        scanner = new Scanner(System.in);
+    public Player(Scanner scanner, GameBoard board) {
+        this.board = board;
+        this.scanner = scanner;
     }
-    
+
     public void placeShips() {
         int[] shipLengths = {5, 4, 3, 3, 2}; // lengths of the ships in Battleship
-        System.out.println("Place your ships (format: 'place ship of length [length] at row [row] column [col] [horizontally/vertically]'): ");
-        Pattern pattern = Pattern.compile("place ship of length (\\d+) at row (\\d+) column (\\d+) (horizontally|vertically)");
         for (int length : shipLengths) {
             Ship ship = new Ship(length);
             boolean shipPlaced = false;
             while (!shipPlaced) {
-                String input = scanner.nextLine();
-                Matcher matcher = pattern.matcher(input);
-                if (matcher.matches()) {
-                    int row = Integer.parseInt(matcher.group(2));
-                    int col = Integer.parseInt(matcher.group(3));
-                    boolean horizontal = matcher.group(4).equals("horizontally");
+                if (scanner != null) {
+                    System.out.println("Enter the row and column to place a ship of length " + length + " (e.g., 3 4):");
+                    int row = scanner.nextInt();
+                    int col = scanner.nextInt();
+                    System.out.println("Place horizontally? (true/false):");
+                    boolean horizontal = scanner.nextBoolean();
                     if (board.canPlaceShip(ship, row, col, horizontal)) {
                         board.placeShip(ship, row, col, horizontal);
                         shipPlaced = true;
                     } else {
-                        System.out.println("Cannot place ship there. Try again: ");
+                        System.out.println("Cannot place ship here. Try again.");
                     }
                 } else {
-                    System.out.println("Invalid input. Try again: ");
+                    // Placeholder for AI ship placement logic if needed
+                    shipPlaced = true;
                 }
             }
         }
     }
-    
+
     public void takeTurn(GameBoard opponentBoard) {
-        System.out.println("Enter target (format: 'target row [row] column [col]'): ");
-        Pattern pattern = Pattern.compile("target row (\\d+) column (\\d+)");
-        while (true) {
-            String input = scanner.nextLine();
-            Matcher matcher = pattern.matcher(input);
-            if (matcher.matches()) {
-                int row = Integer.parseInt(matcher.group(1));
-                int col = Integer.parseInt(matcher.group(2));
-                if (opponentBoard.getCell(row, col) == 'S') {
-                    opponentBoard.setCell(row, col, 'H'); // H for Hit
-                    System.out.println("Hit!");
-                } else {
-                    opponentBoard.setCell(row, col, 'M'); // M for Miss
-                    System.out.println("Miss.");
+        boolean validMove = false;
+        while (!validMove) {
+            try {
+                System.out.println("Enter the row and column to attack (e.g., 3 4):");
+                int row = scanner.nextInt();
+                int col = scanner.nextInt();
+                
+                // Validate input
+                if (row < 0 || row >= 10 || col < 0 || col >= 10) {
+                    System.out.println("Invalid input. Row and column must be between 0 and 9.");
+                    continue;
                 }
-                break;
-            } else {
-                System.out.println("Invalid input. Try again: ");
+
+                char cell = opponentBoard.getCell(row, col);
+                if (cell == '-') {
+                    // Miss
+                    opponentBoard.setCell(row, col, 'M'); // Mark as Miss
+                    System.out.println("Miss!");
+                    validMove = true;
+                } else if (cell == 'S') {
+                    // Hit
+                    opponentBoard.setCell(row, col, 'H'); // Mark as Hit
+                    System.out.println("Hit!");
+                    validMove = true;
+                } else if (cell == 'H' || cell == 'M') {
+                    System.out.println("You have already attacked this cell. Try again.");
+                } else {
+                    System.out.println("Invalid input. You can't attack your own ship.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter integers for the row and column.");
+                scanner.nextLine(); // Clear the input buffer
             }
         }
     }
-    
+
     public GameBoard getBoard() {
         return board;
     }
-
-
 }
